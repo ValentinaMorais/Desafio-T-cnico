@@ -1,32 +1,82 @@
-# Prerequisites
-*.d
+git init -b main
+git add . && git commit -m "initial commit"
+git add . && git commit -m "initial commit"
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <string>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+//definir variaveis de tempo
+int timer_mins = 25;
+int timer_secs = 0;
 
-# Precompiled Headers
-*.gch
-*.pch
+//funcao para mostrar o tempo
+void showTime(int mins, int secs)
+{
+	std::cout <<"\r" << mins << " minutos "
+	          << secs << " segundos restantes ";
+	          
+}
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+//funcao principal
+int main () {
+	
+   //definir temporizador
+   auto start = std::chrono::high_resolution_clock::now();
+   auto finish = start + std::chrono::minutes(timer_mins) +
+                 std::chrono::seconds(timer_secs);
+                 
+//loop ate que o temporizador termine
+while (std::chrono::high_resolution_clock::now() < finish)
+{
+	//obter o tempo restante
+	auto remain = std::chrono::duration_cast<std::chrono::seconds>
+	              (finish - std::chrono::high_resolution_clock::now());
+	              
+	//mostrar temporizador
+	showTime(remain.count() / 60, remain.count() % 60);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	
+	}	
+	
+std::cout << "\nTempo acabou!" << std::endl;
 
-# Fortran module files
-*.mod
-*.smod
+//crie um temporizador de pause de 5 minutos
+int break_mins =5;
+int break_secs =0;
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+//definir temporizador
+auto break_start = std::chrono::high_resolution_clock::now();
+auto break_finish = break_start + std::chrono::minutes(break_mins) +
+                    std::chrono::seconds(break_secs);
+					
+//loop até que o temporizador termine
+while (std::chrono::high_resolution_clock::now() < break_finish)
+{
+  //obter tempo restante
+  auto remain = std::chrono::duration_cast<std::chrono::seconds>
+                (break_finish - std::chrono::high_resolution_clock::now());
+                
+//mostrar temporizador
+showTime(remain.count() / 60, remain.count() %60);
+std::this_thread::sleep_for(std::chrono::seconds(1));
+	}	
+std::cout << "\nA pausa acabou!" << std::endl;
 
-# Executables
-*.exe
-*.out
-*.app
+//solicitar ao usuario para alterar o tempo do pomodoro
+std::cout << "Voce gostaria de mudar o horário do pomodoro? (s/n): ";
+std::string response;
+std::cin >> response;
+
+//se sim, peça por um novo horário
+if (response == "s")
+{
+	std::cout << "Insira o novo tempo (minutos): ";
+	std::cin >> timer_mins;
+	
+}
+//sugerir ao usuario 10 minutos de intervalo após 4 sessoes
+std::cout <<"Apos 4 pomodoros, faca uma pausa de 10 minutos!" << std::endl;
+
+return 0;
+}
